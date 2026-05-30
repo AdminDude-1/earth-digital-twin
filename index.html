@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Curt’s 3D Earth Digital Twin</title>
+  <meta charset="UTF-8">
+  <title>Curts 3D Earth Digital Twin v1</title>
+
+  <!-- Cesium JS -->
+  <script src="https://unpkg.com/cesium@1.113/Build/Cesium/Cesium.js"></script>
+
+  <!-- Cesium CSS -->
+  <link href="https://unpkg.com/cesium@1.113/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 
   <style>
     html, body, #cesiumContainer {
@@ -10,60 +16,49 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      overflow: hidden;
       background: black;
-      font-family: system-ui, sans-serif;
+      overflow: hidden;
     }
 
     .panel {
       position: absolute;
-      top: 16px;
-      left: 16px;
-      background: rgba(255,255,255,0.95);
-      padding: 12px 16px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      top: 10px;
+      left: 10px;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
-  <div id="cesiumContainer"></div>
 
-  <div class="panel">
-    <strong>Curt’s 3D Earth Digital Twin</strong><br>
-    Drag = rotate<br>
-    Scroll = zoom
-  </div>
+<div id="cesiumContainer"></div>
 
-  <script type="module">
-    import {
-      Viewer,
-      Ion,
-      createWorldImagery,
-      IonWorldImageryStyle,
-      Cartesian3,
-      EllipsoidTerrainProvider
-    } from "https://cdn.jsdelivr.net/npm/cesium@1.113.1/Build/Cesium/Cesium.js";
+<div class="panel">
+  Curts 3D Earth Digital Twin<br>
+  Drag = rotate<br>
+  Scroll = zoom
+</div>
 
-    // ✅ Your token (keep it here)
-    Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ZGUxODg4OS00OWNlLTRjMzctYjQzOC1lNDRjYjFjM2NkNDgiLCJpZCI6NDIzOTE1LCJpYXQiOjE3NzcyNDIzMzJ9.Iuafcf0QPEX8p90nMyyQvk3oU4UGzK7OV1-HvRDOzoU";
+<script>
+  // PUT YOUR TOKEN HERE
+  Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ZGUxODg4OS00OWNlLTRjMzctYjQzOC1lNDRjYjFjM2NkNDgiLCJpZCI6NDIzOTE1LCJpYXQiOjE3NzcyNDIzMzJ9.Iuafcf0QPEX8p90nMyyQvk3oU4UGzK7OV1-HvRDOzoU";
 
-    const viewer = new Viewer("cesiumContainer", {
-      imageryProvider: createWorldImagery({
-        style: IonWorldImageryStyle.AERIAL
-      }),
-      terrainProvider: new EllipsoidTerrainProvider(),
-      baseLayerPicker: false,
-      timeline: false,
-      animation: false
-    });
+  var viewer = new Cesium.Viewer("cesiumContainer", {
+    imageryProvider: Cesium.createWorldImagery(),
+    terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+    baseLayerPicker: false,
+    animation: false,
+    timeline: false
+  });
 
-    viewer.scene.globe.enableLighting = true;
+  viewer.camera.setView({
+    destination: Cesium.Cartesian3.fromDegrees(-95, 30, 30000000)
+  });
+</script>
 
-    viewer.camera.setView({
-      destination: Cartesian3.fromDegrees(-95, 30, 30000000)
-    });
-  </script>
 </body>
 </html>
