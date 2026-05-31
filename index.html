@@ -2,13 +2,14 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Curts 3D Earth Digital Twin v2</title>
+  <title>Curts 3D Earth Digital Twin v3</title>
 
   <!-- Cesium JS -->
   <script src="https://unpkg.com/cesium@1.113/Build/Cesium/Cesium.js"></script>
 
   <!-- Cesium CSS -->
-  <link href="https://unpkg.com/cesium@1.113/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://unpkg.com/cesium@1.113/Build/Cesium/Widgets/widgets.css">
 
   <style>
     html, body, #cesiumContainer {
@@ -18,6 +19,7 @@
       padding: 0;
       background: black;
       overflow: hidden;
+      font-family: Arial, sans-serif;
     }
 
     .panel {
@@ -27,7 +29,6 @@
       background: white;
       padding: 10px;
       border-radius: 8px;
-      font-family: Arial, sans-serif;
       font-size: 14px;
     }
   </style>
@@ -38,14 +39,15 @@
 <div id="cesiumContainer"></div>
 
 <div class="panel">
-  Curts 3D Earth Digital Twin v2<br>
-  Drag = rotate<br>
-  Scroll = zoom
+  Curts 3D Earth Digital Twin v3<br>
+  Flying to Motif #1 - Rockport MA
 </div>
 
 <script>
+  // ✅ Your token
   Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ZGUxODg4OS00OWNlLTRjMzctYjQzOC1lNDRjYjFjM2NkNDgiLCJpZCI6NDIzOTE1LCJpYXQiOjE3NzcyNDIzMzJ9.Iuafcf0QPEX8p90nMyyQvk3oU4UGzK7OV1-HvRDOzoU";
 
+  // ✅ Create viewer
   var viewer = new Cesium.Viewer("cesiumContainer", {
     terrainProvider: new Cesium.EllipsoidTerrainProvider(),
     baseLayerPicker: true,
@@ -55,29 +57,28 @@
 
   viewer.scene.globe.enableLighting = true;
 
-  // Start in space
-viewer.camera.setView({
-  destination: Cesium.Cartesian3.fromDegrees(-95, 30, 30000000)
-});
-
-// After a short delay, fly to Rockport MA
-setTimeout(function () {
-  viewer.camera.flyTo({
-    destination: Cesium.Cartesian3.fromDegrees(
-      -70.6203,  // longitude
-      42.6556,   // latitude
-      500       // height in meters (~street level-ish)
-    ),
-    duration: 5,  // seconds for smooth flight
-    orientation: {
-      heading: 0.0,
-      pitch: -0.4,   // slight tilt for better viewing angle
-      roll: 0.0
-    }
+  // ✅ Start from space
+  viewer.camera.setView({
+    destination: Cesium.Cartesian3.fromDegrees(-95, 30, 30000000)
   });
-}, 1500); // wait 1.5 seconds before flying
+
+  // ✅ Fly to Motif #1
+  setTimeout(function () {
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(
+        -70.6207,  // Motif #1 longitude
+        42.6559,   // Motif #1 latitude
+        300        // very close zoom (near street level)
+      ),
+      duration: 7,
+      orientation: {
+        heading: 0.5,
+        pitch: -0.65,
+        roll: 0.0
+      }
+    });
+  }, 1500);
 </script>
-``
 
 </body>
 </html>
