@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Curts 3D Earth Digital Twin v5</title>
+<title>Curts 3D Earth Digital Twin v6</title>
 
 <!-- Cesium JS -->
 <script src="https://unpkg.com/cesium@1.113/Build/Cesium/Cesium.js"></script>
 
 <!-- Cesium CSS -->
-<link rel="stylesheet" href="https://unpkg.com/cesium@1.113/Build/Cesium/Widgets/widgets.css">
+<link href="https://unpkg.com/cesium@1.113/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 
 <style>
 html, body, #cesiumContainer {
@@ -43,7 +43,7 @@ button {
 <div id="cesiumContainer"></div>
 
 <div class="panel">
-<b>Curts Earth Twin v5</b><br>
+<b>Curts Earth Twin v6</b><br>
 <button onclick="flyToMotif()">Go to Motif #1</button>
 <button onclick="flyToBoston()">Go to Boston</button>
 </div>
@@ -51,21 +51,24 @@ button {
 <script>
 Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ZGUxODg4OS00OWNlLTRjMzctYjQzOC1lNDRjYjFjM2NkNDgiLCJpZCI6NDIzOTE1LCJpYXQiOjE3NzcyNDIzMzJ9.Iuafcf0QPEX8p90nMyyQvk3oU4UGzK7OV1-HvRDOzoU";
 
-// ✅ Create viewer
+// ✅ Viewer with REAL terrain (huge improvement)
 var viewer = new Cesium.Viewer("cesiumContainer", {
-  terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+  terrainProvider: Cesium.createWorldTerrain(),
   baseLayerPicker: true,
   animation: false,
   timeline: false
 });
 
-// ✅ Enable lighting (day/night effect)
+// ✅ Lighting realism
 viewer.scene.globe.enableLighting = true;
 
-// ✅ Add Motif #1 marker (guaranteed visible)
+// ✅ Your corrected Motif #1 coordinates
 var motif = viewer.entities.add({
   name: "Motif #1",
-  position: Cesium.Cartesian3.fromDegrees(-70.6207, 42.6559),
+  position: Cesium.Cartesian3.fromDegrees(
+    -70.6148485,   // longitude (W = negative)
+    42.6592475     // latitude
+  ),
   billboard: {
     image: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
     scale: 0.05
@@ -78,23 +81,31 @@ var motif = viewer.entities.add({
   }
 });
 
-// ✅ Start view (overlooking Earth)
+// ✅ Start in space (overlooking Earth)
 viewer.camera.setView({
   destination: Cesium.Cartesian3.fromDegrees(-95, 30, 30000000)
 });
 
-// ✅ Fly to Motif #1
+// ✅ Fly to Motif accurately
 function flyToMotif() {
   viewer.flyTo(motif, {
-    duration: 5,
-    offset: new Cesium.HeadingPitchRange(0, -0.6, 200)
+    duration: 6,
+    offset: new Cesium.HeadingPitchRange(
+      0.2,     // slight rotation
+      -0.6,    // look down
+      250      // height
+    )
   });
 }
 
 // ✅ Fly to Boston
 function flyToBoston() {
   viewer.camera.flyTo({
-    destination: Cesium.Cartesian3.fromDegrees(-71.0589, 42.3601, 3000),
+    destination: Cesium.Cartesian3.fromDegrees(
+      -71.0589,
+      42.3601,
+      3000
+    ),
     duration: 5,
     orientation: {
       heading: 0,
