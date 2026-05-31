@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Curts 3D Earth Digital Twin v1</title>
+  <title>Curts 3D Earth Digital Twin v2</title>
 
   <!-- Cesium JS -->
   <script src="https://unpkg.com/cesium@1.113/Build/Cesium/Cesium.js"></script>
@@ -38,7 +38,7 @@
 <div id="cesiumContainer"></div>
 
 <div class="panel">
-  Curts 3D Earth Digital Twin v1<br>
+  Curts 3D Earth Digital Twin v2<br>
   Drag = rotate<br>
   Scroll = zoom
 </div>
@@ -55,9 +55,27 @@
 
   viewer.scene.globe.enableLighting = true;
 
-  viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(-95, 30, 30000000)
+  // Start in space
+viewer.camera.setView({
+  destination: Cesium.Cartesian3.fromDegrees(-95, 30, 30000000)
+});
+
+// After a short delay, fly to Rockport MA
+setTimeout(function () {
+  viewer.camera.flyTo({
+    destination: Cesium.Cartesian3.fromDegrees(
+      -70.6203,  // longitude
+      42.6556,   // latitude
+      2000       // height in meters (~street level-ish)
+    ),
+    duration: 5,  // seconds for smooth flight
+    orientation: {
+      heading: 0.0,
+      pitch: -0.4,   // slight tilt for better viewing angle
+      roll: 0.0
+    }
   });
+}, 1500); // wait 1.5 seconds before flying
 </script>
 ``
 
