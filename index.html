@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Curts 3D Earth Digital Twin v8</title>
+<title>Curts 3D Earth Digital Twin v9</title>
 
 <!-- Cesium JS -->
 <script src="https://unpkg.com/cesium@1.113/Build/Cesium/Cesium.js"></script>
@@ -43,14 +43,14 @@ button {
 <div id="cesiumContainer"></div>
 
 <div class="panel">
-<b>Curts Earth Twin v8</b><br>
+<b>Curts Earth Twin v9</b><br>
 <button onclick="flyToMotif()">Go to Motif #1</button>
 <button onclick="flyToBoston()">Go to Boston</button>
-<button onclick="flyToConstitution()">USS Constitution</button> 
+<button onclick="flyToConstitution()">USS Constitution</button>
 </div>
 
 <script>
-Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ZGUxODg4OS00OWNlLTRjMzctYjQzOC1lNDRjYjFjM2NkNDgiLCJpZCI6NDIzOTE1LCJpYXQiOjE3NzcyNDIzMzJ9.Iuafcf0QPEX8p90nMyyQvk3oU4UGzK7OV1-HvRDOzoU";
+Cesium.Ion.defaultAccessToken = "PASTE_YOUR_TOKEN_HERE";
 
 var viewer = new Cesium.Viewer("cesiumContainer", {
   terrainProvider: new Cesium.EllipsoidTerrainProvider(),
@@ -59,10 +59,9 @@ var viewer = new Cesium.Viewer("cesiumContainer", {
   timeline: false
 });
 
-// lighting
 viewer.scene.globe.enableLighting = true;
 
-// Motif #1 marker (your exact coordinates)
+// ✅ Motif #1 marker
 var motif = viewer.entities.add({
   name: "Motif #1",
   position: Cesium.Cartesian3.fromDegrees(-70.6148485, 42.6592475),
@@ -75,8 +74,10 @@ var motif = viewer.entities.add({
     pixelOffset: new Cesium.Cartesian2(0, -30),
     fillColor: Cesium.Color.YELLOW
   }
-  // Uss Constition  
-  var constitution = viewer.entities.add({
+});
+
+// ✅ USS Constitution marker (FIXED placement)
+var constitution = viewer.entities.add({
   name: "USS Constitution",
   position: Cesium.Cartesian3.fromDegrees(
     -71.05661978085676,
@@ -93,12 +94,13 @@ var motif = viewer.entities.add({
   }
 });
 
-// start in space
+// ✅ Start in space
 viewer.camera.setView({
   destination: Cesium.Cartesian3.fromDegrees(-95, 30, 30000000)
 });
 
-// fly function
+// ✅ Functions now properly defined
+
 function flyToMotif() {
   viewer.flyTo(motif, {
     duration: 5,
@@ -106,24 +108,19 @@ function flyToMotif() {
   });
 }
 
-// button support
 function flyToBoston() {
   viewer.camera.flyTo({
     destination: Cesium.Cartesian3.fromDegrees(-71.0589, 42.3601, 3000),
     duration: 5
   });
 }
+
 function flyToConstitution() {
   viewer.flyTo(constitution, {
     duration: 6,
-    offset: new Cesium.HeadingPitchRange(
-      0.3,   // slight rotation
-      -0.6,  // downward angle
-      300    // zoom distance
-    )
+    offset: new Cesium.HeadingPitchRange(0.3, -0.6, 300)
   });
 }
-  
 </script>
 
 </body>
