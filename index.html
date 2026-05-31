@@ -1,37 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Curts 3D Earth Digital Twin v3</title>
+<meta charset="UTF-8">
+<title>Curts 3D Earth Digital Twin</title>
 
-  <!-- Cesium JS -->
-  <script src="https://unpkg.com/cesium@1.113/Build/Cesium/Cesium.js"></script>
+<!-- Cesium -->
+<script src="https://unpkg.com/cesium@1.113/Build/Cesium/Cesium.js"></script>
+<link href="https://unpkg.com/cesium@1.113/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 
-  <!-- Cesium CSS -->
-  <link rel="stylesheet"
-    href="https://unpkg.com/cesium@1.113/Build/Cesium/Widgets/widgets.css">
+<style>
+html, body, #cesiumContainer {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: black;
+  font-family: Arial;
+}
 
-  <style>
-    html, body, #cesiumContainer {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: black;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
+.panel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
 
-    .panel {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: white;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-  </style>
+button {
+  margin-top: 5px;
+  width: 100%;
+}
+</style>
 </head>
 
 <body>
@@ -39,45 +41,86 @@
 <div id="cesiumContainer"></div>
 
 <div class="panel">
-  Curts 3D Earth Digital Twin v3<br>
-  Flying to Motif #1 - Rockport MA
+<b>Curts Earth Twin v4</b><br>
+<button onclick="flyToMotif()">Go to Motif #1</button>
+<button onclick="flyToBoston()">Go to Boston</button>
 </div>
 
 <script>
-  // ✅ Your token
-  Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ZGUxODg4OS00OWNlLTRjMzctYjQzOC1lNDRjYjFjM2NkNDgiLCJpZCI6NDIzOTE1LCJpYXQiOjE3NzcyNDIzMzJ9.Iuafcf0QPEX8p90nMyyQvk3oU4UGzK7OV1-HvRDOzoU";
+Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ZGUxODg4OS00OWNlLTRjMzctYjQzOC1lNDRjYjFjM2NkNDgiLCJpZCI6NDIzOTE1LCJpYXQiOjE3NzcyNDIzMzJ9.Iuafcf0QPEX8p90nMyyQvk3oU4UGzK7OV1-HvRDOzoU";
 
-  // ✅ Create viewer
-  var viewer = new Cesium.Viewer("cesiumContainer", {
-    terrainProvider: new Cesium.EllipsoidTerrainProvider(),
-    baseLayerPicker: true,
-    animation: false,
-    timeline: false
+// Create viewer
+var viewer = new Cesium.Viewer("cesiumContainer", {
+  terrainProvider: new Cesium.EllipsoidTerrainProvider(),
+  baseLayerPicker: true,
+  animation: false,
+  timeline: false
+});
+
+// Day/night lighting
+viewer.scene.globe.enableLighting = true;
+
+// 🏡 Motif #1 marker
+var motif = viewer.entities.add({
+  name: "Motif #1",
+  position: Cesium.Cartesian3.fromDegrees(-70.6207, 42.6559),
+  point: {
+    pixelSize: 10,
+    color: Cesium.Color.RED
+  },
+  label: {
+    text: "Motif #1",
+    font: "14px Arial",
+    pixelOffset: new Cesium.Cartesian2(0, -20)
+  }
+});
+
+// ✈️ Fly to Motif #1
+function flyToMotif() {
+  viewer.camera.flyTo({
+    destination: Cesium.Cartesian3.fromDegrees(
+      -70.6207,
+      42.6559,
+      200
+    ),
+    duration: 6,
+    orientation: {
+      heading: 0,
+      pitch: -0.6,
+      roll: 0
+    }
   });
+}
 
-  viewer.scene.globe.enableLighting = true;
-
-  // ✅ Start from space
-  viewer.camera.setView({
-    destination: Cesium.Cartesian3.fromDegrees(-95, 30, 30000000)
+// ✈️ Fly to Boston
+function flyToBoston() {
+  viewer.camera.flyTo({
+    destination: Cesium.Cartesian3.fromDegrees(
+      -71.0589,
+      42.3601,
+      3000
+    ),
+    duration: 6,
+    orientation: {
+      heading: 0,
+      pitch: -0.5,
+      roll: 0
+    }
   });
+}
 
-  // ✅ Fly to Motif #1
-  setTimeout(function () {
-    viewer.camera.flyTo({
-      destination: Cesium.Cartesian3.fromDegrees(
-        -70.6207,  // Motif #1 longitude
-        42.6559,   // Motif #1 latitude
-        300        // very close zoom (near street level)
-      ),
-      duration: 7,
-      orientation: {
-        heading: 0.5,
-        pitch: -0.65,
-        roll: 0.0
-      }
-    });
-  }, 1500);
+// 🌍 Start in space then auto-fly
+viewer.camera.setView({
+  destination: Cesium.Cartesian3.fromDegrees(-95, 30, 30000000)
+});
+
+setTimeout(flyToMotif, 1500);
+
+// 🏙 Optional: Boston 3D buildings (auto load)
+viewer.scene.primitives.add(
+  Cesium.createOsmBuildings()
+);
+
 </script>
 
 </body>
